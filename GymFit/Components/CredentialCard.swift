@@ -14,21 +14,26 @@ struct CredentialCard: View {
     
     var body: some View {
         VStack() {
-            Text(userName)
-                .font(.largeTitle)
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-                .padding(.top)
+            HStack {
+                Text(userName)
+                    .font(.largeTitle)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+            .background(Color("PrimaryYellow"))
             Text(userNumber)
                 .font(.subheadline)
+                .foregroundStyle(Color("AppBackground"))
+            Spacer()
             QRCode(qrCodeImage: qrCodeImage)
                 .padding(.bottom)
+            Spacer()
         }
-        .padding(16)
         .frame(maxWidth: 360, maxHeight: 360)
         .background(Color.white)
         .cornerRadius(10)
-        .shadow(radius: 5)
+        .shadow(radius: 2)
     }
 }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FAQ_URL</key>
+	<string>https://fitmexico.mx/contacto/</string>
+	<key>INSTAGRAM_URL</key>
+	<string>https://www.instagram.com/fitmexico.mx?igsh=MW1wa2hnYzdqY3JwaA==</string>
+	<key>COBRANZA_URL</key>
+	<string>https://fitmexico.mx/cobranza/</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>FACEBOOK_URL</key>
+	<string>https://www.facebook.com/FITMX?mibextid=LQQJ4d</string>
+</dict>
+</plist>
