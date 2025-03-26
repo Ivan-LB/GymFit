@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedTab = "Home"
+    @State private var selectedTab = "home"
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -40,18 +41,11 @@ struct ContentView: View {
                 .toolbarBackground(.visible, for: .tabBar)
                 .tag("menu")
         }
-        .accentColor(.yellow)
+        .accentColor(Color("PrimaryYellow"))
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
-
 
 #Preview {
     ContentView()
 }
-
-//NavigationLink(destination: SocialMediaView()) {
-//    FeatureButton(icon: "network", label: "Red Social")
-//}
-//NavigationLink(destination: CustomerServiceView()) {
-//    FeatureButton(icon: "megaphone", label: "Atención")
-//}

@@ -2,133 +2,75 @@
 //  MenuView.swift
 //  GymFit
 //
-//  Created by Ivan Lorenzana Belli on 30/08/24.
+//  Created by Ivan Lorenzana Belli on 26/03/25.
 //
 
 import SwiftUI
 
 struct MenuView: View {
-    private var isLoading = false
-    private let facebookURL: URL = ConfigurationManager.shared.facebookURL
-    private let instagramURL: URL = ConfigurationManager.shared.instagramURL
+    var body: some View {
+        NavigationView {
+            List {
+                Section(header: Text("Mi Cuenta")) {
+                    NavigationLink(destination: ProfileView()) {
+                        MenuRow(icon: "person.fill", title: "Perfil")
+                    }
+                    
+                    NavigationLink(destination: MembershipView()) {
+                        MenuRow(icon: "creditcard.fill", title: "Membresía")
+                    }
+                }
+                
+                Section(header: Text("Servicios")) {
+                    NavigationLink(destination: CustomerServiceView()) {
+                        MenuRow(icon: "megaphone.fill", title: "Atención al Cliente")
+                    }
+                    
+                    NavigationLink(destination: SocialMediaView()) {
+                        MenuRow(icon: "network", title: "Redes Sociales")
+                    }
+                }
+                
+                Section(header: Text("Configuración")) {
+                    NavigationLink(destination: NotificationsSettingsView()) {
+                        MenuRow(icon: "bell.fill", title: "Notificaciones")
+                    }
+                    
+                    NavigationLink(destination: AppSettingsView()) {
+                        MenuRow(icon: "gearshape.fill", title: "Ajustes")
+                    }
+                }
+                
+                Section {
+                    Button(action: {
+                        // Lógica para cerrar sesión
+                    }) {
+                        Text("Cerrar Sesión")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+            .listStyle(InsetGroupedListStyle())
+            .navigationTitle("Menú")
+        }
+    }
+}
 
-    @State var isOn = true
+struct MenuRow: View {
+    var icon: String
+    var title: String
     
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Spacer()
-                    Button("Log out") {
-                        Task {
-                            do {
-                                // try viewModel.signOut()
-                                // navigationViewModel.showSignInView = true
-                            } catch {
-                                print(error)
-                            }
-                        }
-                    }
-                    .foregroundColor(Color("PrimaryRed"))
-                }
-                if isLoading {
-                    ProgressView("Loading...")
-                } else {
-                    HStack {
-                        Spacer()
-                        if let url = URL(string: "viewModel.userMedicalProfile.profilePictureURL") {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 97, height: 97)
-                                    .clipped()
-                            } placeholder: {
-                                ProgressView()
-                                    .frame(width: 97, height: 97)
-                            }
-                        }
-                        Spacer()
-                    }
-                    HStack {
-                        Spacer()
-                        VStack {
-                            Text("Full Name")
-                                .font(UIConstants.UIFont.largeTitle)
-                        }
-                        Spacer()
-                    }
-                    .padding(.bottom, 8)
-                }
-                HStack() {
-                    SocialMediaButton(icon: "facebook", label: "Facebook",color: Color.blue, url: facebookURL)
-                    SocialMediaButton(icon: "instagram", label: "Instagram",color: Color.red, url: instagramURL)
-                }
-                
-                NavigationLink {
-                    CustomerServiceView()
-                } label: {
-                    HStack {
-                        Text("Atención al Cliente")
-                            .font(UIConstants.UIFont.smallTitle)
-                            .foregroundColor(.black)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 1)
-                    .listRowSeparator(.hidden)
-                }
-                
-                NavigationLink {
-                    DocumentWebView()
-                } label: {
-                    HStack {
-                        Text("FAQ")
-                            .font(UIConstants.UIFont.smallTitle)
-                            .foregroundColor(.black)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 1)
-                    .listRowSeparator(.hidden)
-                }
-                
-                // TODO: To many things to consider
-//                Button(role: .destructive) {
-//                    Task {
-//                        do {
-//                            //try await viewModel.deleteAccount()
-//                            // TODO: Add an alert to let the user know that we're gonna delete the account IF true -> re-sign in to authenticate the user and succesfully delete the account
-//                            //navigationViewModel.showSignInView = true
-//                        } catch {
-//                            print(error)
-//                        }
-//                    }
-//                } label: {
-//                    HStack {
-//                        Text("Reset Password")
-//                        Spacer()
-//                    }
-//                }
-//                .padding()
-//                .background(Color.white)
-//                .cornerRadius(10)
-//                .shadow(radius: 1)
-                
-                Spacer()
-            }
-            .padding(.horizontal)
-            .listStyle(.plain)
-            .listRowBackground(Color.clear)
+        HStack(spacing: 15) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(.yellow)
+                .frame(width: 30, height: 30)
+            
+            Text(title)
+                .font(.body)
         }
+        .padding(.vertical, 5)
     }
 }
 

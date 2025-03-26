@@ -8,59 +8,141 @@
 import SwiftUI
 
 struct CustomerServiceView: View {
-    private let cancelationLink: URL = ConfigurationManager.shared.cancelMembership
+    @Environment(\.openURL) var openURL
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Image("logofit2020")
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: 250)
-            Text("Atención al Cliente")
-                .font(.title)
-            Text("En FIT te queremos escuchar, si tienes alguna queja, sugerencia o comentario puedes hacernoslo llegar por correo electrónico.")
-            Text("Teléfono: +52 664 900 0014")
-            Text("Correo: soyfit@fitmexico.com")
-            
-            // Sección de Link de Cancelación
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Link de Cancelación")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.red)  // Puedes cambiar el color si lo prefieres
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Encabezado
+                Text("Atención al Cliente")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.horizontal)
                 
-                Text("Horario de atención: 9:00 am a 1:00 pm")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                // Tarjeta de horario
+                ServiceInfoCard(
+                    title: "Horario de Atención",
+                    icon: "clock.fill",
+                    content: "9:00 am - 1:00 pm",
+                    subtitle: "Tercer miércoles de cada mes"
+                )
                 
-                Text("Tercer miércoles de cada mes")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                // Tarjeta de contacto
+                ServiceInfoCard(
+                    title: "Contacto",
+                    icon: "phone.fill",
+                    content: "+52 123 456 7890",
+                    subtitle: "contacto@gymfit.com"
+                )
                 
-                // Botón para redirigir al enlace
+                // Botón de cancelación
                 Button(action: {
-                    openURL(cancelationLink)
+                    if let url = URL(string: "https://gymfit.com/cancelacion") {
+                        openURL(url)
+                    }
                 }) {
-                    Text("Ir al Link de Cancelación")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.red)
-                        .cornerRadius(10)
+                    HStack {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 20))
+                        Text("Solicitar Cancelación")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red.opacity(0.8))
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+                .padding(.horizontal)
+                
+                // FAQ
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Preguntas Frecuentes")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.horizontal)
+                    
+                    FAQItem(question: "¿Cómo puedo congelar mi membresía?", answer: "Puedes solicitar congelar tu membresía por hasta 30 días al año. Contacta a atención al cliente durante el horario establecido.")
+                    
+                    FAQItem(question: "¿Cuál es la política de reembolso?", answer: "Ofrecemos reembolso completo dentro de los primeros 7 días de tu membresía si no estás satisfecho con nuestro servicio.")
+                    
+                    FAQItem(question: "¿Puedo transferir mi membresía?", answer: "Las membresías son personales e intransferibles según nuestros términos y condiciones.")
                 }
                 .padding(.top)
             }
-            Spacer()
+            .padding(.vertical)
+        }
+    }
+}
+
+struct ServiceInfoCard: View {
+    var title: String
+    var icon: String
+    var content: String
+    var subtitle: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                    .foregroundColor(.yellow)
+                
+                Text(title)
+                    .font(.headline)
+            }
+            
+            Text(content)
+                .font(.title3)
+                .fontWeight(.semibold)
+            
+            Text(subtitle)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
         .padding()
-        .navigationTitle("Atención al Cliente")
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+        .padding(.horizontal)
     }
-    // Función para abrir el URL
-    func openURL(_ url: URL) {
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
+}
+
+struct FAQItem: View {
+    var question: String
+    var answer: String
+    @State private var isExpanded = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Button(action: {
+                withAnimation {
+                    isExpanded.toggle()
+                }
+            }) {
+                HStack {
+                    Text(question)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    Spacer()
+                    
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .foregroundColor(.yellow)
+                }
+            }
+            
+            if isExpanded {
+                Text(answer)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 5)
+            }
         }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+        .padding(.horizontal)
     }
 }
 

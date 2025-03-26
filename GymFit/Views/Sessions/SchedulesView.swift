@@ -8,71 +8,148 @@
 import SwiftUI
 
 struct SchedulesView: View {
-    @State private var isImageFullScreen = false  // Estado para controlar si se muestra la imagen en pantalla completa
+    @State private var showFullScreenImage = false
+    @State private var selectedDay = 0
+    
+    let days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    let sampleClasses: [GymClass] = [
+        GymClass(name: "Yoga", instructor: "Ana Pérez", time: "7:00 AM", dayIndex: 0),
+        GymClass(name: "HIIT", instructor: "Carlos Gómez", time: "9:00 AM", dayIndex: 0),
+        GymClass(name: "CrossFit", instructor: "Luis Fernández", time: "6:00 PM", dayIndex: 1),
+        GymClass(name: "Spinning", instructor: "Laura Torres", time: "8:00 AM", dayIndex: 2),
+        GymClass(name: "Pilates", instructor: "Sofía Rojas", time: "5:00 PM", dayIndex: 3),
+        GymClass(name: "Zumba", instructor: "José Martínez", time: "6:30 PM", dayIndex: 4)
+    ]
+
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Horarios de Sesiones")
-                    .font(.title)
-                    .padding(.bottom)
-
-                // Imagen que representa los horarios (cuando el usuario haga tap, se expandirá)
-                Button(action: {
-                    isImageFullScreen.toggle()  // Abrir la imagen en pantalla completa
-                }) {
-                    Image("Sesiones")  // Asegúrate de que esta imagen está en tus assets
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
+        NavigationView {
+            VStack {
+                // Selector de días
+                Picker("Día", selection: $selectedDay) {
+                    ForEach(0..<days.count, id: \.self) { index in
+                        Text(days[index]).tag(index)
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())  // Para que no se vea como un botón convencional
-
-                // Aquí puedes agregar el calendario o la lista de sesiones
-//                ForEach(0..<10) { index in
-//                    HStack {
-//                        Text("Clase \(index + 1)")
-//                        Spacer()
-//                        Text("Hora: 7:00 AM")
-//                    }
-//                    .padding()
-//                    .background(Color.gray.opacity(0.2))
-//                    .cornerRadius(10)
-//                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+                
+                ScrollView {
+                    VStack(spacing: 15) {
+                        // Horario del día como imagen (tappable)
+                        Button(action: {
+                            showFullScreenImage = true
+                        }) {
+                            Image("schedule_placeholder")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                )
+                                .padding(.horizontal)
+                        }
+                        
+                        // Lista de clases del día
+                        ForEach(classesForSelectedDay) { gymClass in
+                            ClassCard(gymClass: gymClass)
+                        }
+                    }
+                    .padding(.bottom)
+                }
             }
-            .padding()
+            .navigationTitle("Horarios")
+            .fullScreenCover(isPresented: $showFullScreenImage) {
+                FullScreenImageView(image: "schedule_placeholder")
+            }
         }
-        .fullScreenCover(isPresented: $isImageFullScreen, content: {
-            FullScreenImageView(isPresented: $isImageFullScreen, imageName: "Sesiones")
-        })
+    }
+    
+    // Clases filtradas por día seleccionado
+    var classesForSelectedDay: [GymClass] {
+        sampleClasses.filter { $0.dayIndex == selectedDay }
     }
 }
 
-struct FullScreenImageView: View {
-    @Binding var isPresented: Bool
-    var imageName: String
+// Modelo para clases
+struct GymClass: Identifiable {
+    var id = UUID()
+    var name: String
+    var instructor: String
+    var time: String
+    var dayIndex: Int
+}
+
+// Tarjeta para cada clase
+struct ClassCard: View {
+    var gymClass: GymClass
     
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            Color.black.ignoresSafeArea()  // Fondo negro
-            Image(imageName)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .onTapGesture {
-                    isPresented.toggle()  // Cerrar la vista de pantalla completa cuando se haga tap en la imagen
-                }
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(gymClass.name)
+                    .font(.headline)
+                Text(gymClass.instructor)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
             
-            Button(action: {
-                isPresented.toggle()  // Botón para cerrar la vista
-            }) {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 30))
-                    .foregroundColor(.white)
-                    .padding()
+            Spacer()
+            
+            Text(gymClass.time)
+                .font(.system(.headline, design: .monospaced))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.yellow.opacity(0.2))
+                .foregroundColor(.black)
+                .cornerRadius(8)
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .padding(.horizontal)
+    }
+}
+
+// Vista de imagen a pantalla completa
+struct FullScreenImageView: View {
+    @Environment(\.presentationMode) var presentationMode
+    var image: String
+    
+    var body: some View {
+        ZStack {
+            Color.black.edgesIgnoringSafeArea(.all)
+            
+            Image(image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 30))
+                            .foregroundColor(.white)
+                            .padding()
+                    }
+                }
+                Spacer()
             }
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.height > 100 {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+        )
     }
 }
 

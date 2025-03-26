@@ -10,9 +10,15 @@ import SwiftData
 
 @main
 struct GymFitApp: App {
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if isLoggedIn {
+                ContentView()
+            } else {
+                AuthenticationView(isLoggedIn: $isLoggedIn)
+            }
         }
     }
 }
