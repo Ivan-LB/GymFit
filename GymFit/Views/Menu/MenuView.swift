@@ -56,24 +56,6 @@ struct MenuView: View {
     }
 }
 
-struct MenuRow: View {
-    var icon: String
-    var title: String
-    
-    var body: some View {
-        HStack(spacing: 15) {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundColor(.yellow)
-                .frame(width: 30, height: 30)
-            
-            Text(title)
-                .font(.body)
-        }
-        .padding(.vertical, 5)
-    }
-}
-
 #Preview {
     MenuView()
 }

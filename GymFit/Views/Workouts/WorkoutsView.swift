@@ -77,38 +77,3 @@ struct WorkoutsView: View {
         // Implementar lógica para eliminar
     }
 }
-
-// Modelo de datos para ejercicios
-struct Workout: Identifiable {
-    var id = UUID()
-    var name: String
-    var sets: Int
-    var reps: Int
-    var weight: Double
-    var date: Date
-}
-
-// Fila para cada ejercicio
-struct WorkoutRow: View {
-    var workout: Workout
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(workout.name)
-                    .font(.headline)
-                Text("\(workout.sets) series × \(workout.reps) reps")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Text("\(Int(workout.weight)) kg")
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundColor(.yellow)
-        }
-        .padding(.vertical, 8)
-    }
-}

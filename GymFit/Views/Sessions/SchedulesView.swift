@@ -40,7 +40,7 @@ struct SchedulesView: View {
                         Button(action: {
                             showFullScreenImage = true
                         }) {
-                            Image("schedule_placeholder")
+                            Image("sesiones_images")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .cornerRadius(12)
@@ -69,87 +69,6 @@ struct SchedulesView: View {
     // Clases filtradas por día seleccionado
     var classesForSelectedDay: [GymClass] {
         sampleClasses.filter { $0.dayIndex == selectedDay }
-    }
-}
-
-// Modelo para clases
-struct GymClass: Identifiable {
-    var id = UUID()
-    var name: String
-    var instructor: String
-    var time: String
-    var dayIndex: Int
-}
-
-// Tarjeta para cada clase
-struct ClassCard: View {
-    var gymClass: GymClass
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(gymClass.name)
-                    .font(.headline)
-                Text(gymClass.instructor)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Text(gymClass.time)
-                .font(.system(.headline, design: .monospaced))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(Color.yellow.opacity(0.2))
-                .foregroundColor(.black)
-                .cornerRadius(8)
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-        .padding(.horizontal)
-    }
-}
-
-// Vista de imagen a pantalla completa
-struct FullScreenImageView: View {
-    @Environment(\.presentationMode) var presentationMode
-    var image: String
-    
-    var body: some View {
-        ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
-            
-            Image(image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .edgesIgnoringSafeArea(.all)
-            
-            VStack {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 30))
-                            .foregroundColor(.white)
-                            .padding()
-                    }
-                }
-                Spacer()
-            }
-        }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    if value.translation.height > 100 {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-        )
     }
 }
 

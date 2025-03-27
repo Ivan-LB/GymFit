@@ -44,7 +44,7 @@ struct CredentialCard: View {
                     .font(.headline)
                     .padding(.bottom, 15)
             }
-            .frame(maxWidth: 300, maxHeight: 380)
+            .frame(maxWidth: .infinity, maxHeight: 380)
             .background(Color(.systemBackground))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -60,40 +60,31 @@ struct CredentialCard: View {
             
             // Reverso de la tarjeta (información adicional)
             VStack(spacing: 15) {
-                Image("gym_logo_placeholder") // Reemplazar con logo real
+                Image("logofit2020") // Reemplazar con logo real
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: 60)
-                    .padding(.top, 20)
+                    .frame(maxWidth: 180)
                 
                 VStack(spacing: 5) {
                     Text("GymFit")
                         .font(.title2)
                         .fontWeight(.bold)
-                    
-                    Text("Tu camino al éxito fitness")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
                 }
                 
                 Divider()
                     .padding(.horizontal)
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    InfoRow(label: "Dirección", value: "Av. Principal #123")
-                    InfoRow(label: "Teléfono", value: "123-456-7890")
-                    InfoRow(label: "Horario", value: "Lun-Dom: 6:00 - 22:00")
+                    InfoRow(label: "Dirección", value: "Av de los Insurgentes 18015, Rio Tijuana 3ra Etapa, 22226 Tijuana, B.C.")
+                    InfoRow(label: "Teléfono", value: "664-900-0014")
+                    InfoRow(label: "Horario", value: "Lun-Jueves: 5:00am - 22:50pm\n" +
+                            "Viernes: 5:00am - 20:50pm\n" +
+                            "Sábado: 7:00am - 3:50pm\n" +
+                            "Domingo: Cerrado")
                 }
                 .padding(.horizontal)
-                
-                Spacer()
-                
-                Text("Presenta esta credencial en recepción")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom, 15)
             }
-            .frame(maxWidth: 300, maxHeight: 380)
+            .frame(maxWidth: .infinity, maxHeight: 380)
             .background(Color(.systemBackground))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -143,7 +134,7 @@ struct QRCode: View {
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 180, height: 180)
+                    .frame(maxWidth: 230, maxHeight: 230)
                     .padding(10)
                     .background(Color.white)
                     .cornerRadius(10)
@@ -151,7 +142,7 @@ struct QRCode: View {
                 // Placeholder mientras se genera el QR
                 Rectangle()
                     .fill(Color.gray.opacity(0.3))
-                    .frame(width: 180, height: 180)
+                    .frame(maxWidth: 230, maxHeight: 230)
                     .cornerRadius(10)
                 
                 ProgressView()
